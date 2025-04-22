@@ -44,11 +44,6 @@
       border-left: 6px solid #4b0082;
       border-radius: 8px;
       display: none;
-      animation: pop 0.4s ease-in-out;
-    }
-    @keyframes pop {
-      0% { transform: scale(0.9); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
     .emoji {
       font-size: 1.8rem;
@@ -67,35 +62,6 @@
     button:hover {
       background-color: #36005e;
     }
-    .confetti {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9999;
-    }
-    #clippy {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 10000;
-      display: none;
-      background: white;
-      border-radius: 10px;
-      padding: 0.5rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      text-align: center;
-    }
-    #clippy img {
-      width: 80px;
-    }
-    #clippy p {
-      margin: 0.5rem 0 0 0;
-      font-size: 0.9rem;
-      color: #333;
-    }
   </style>
 </head>
 <body>
@@ -103,19 +69,78 @@
   <p style="text-align:center; font-style: italic;">Because your personality deserves its own dramatic entrance.</p>
 
   <form id="quizForm">
-    <!-- Questions here (unchanged) -->
+    <div class="question">
+      <p>1. What’s your work style?</p>
+      <label><input type="radio" name="q1" value="A"> A. I come in hot, make an impact, and leave people reeling.</label>
+      <label><input type="radio" name="q1" value="B"> B. Smooth and steady. You’ll barely notice I’m doing all the work.</label>
+      <label><input type="radio" name="q1" value="C"> C. A little chaotic, but somehow it <em>works</em>.</label>
+      <label><input type="radio" name="q1" value="D"> D. I'm dramatic, emotional, and slightly unpredictable.</label>
+      <label><input type="radio" name="q1" value="E"> E. Organized? Yes. Boring? Never.</label>
+    </div>
+
+    <div class="question">
+      <p>2. How do you enter a meeting?</p>
+      <label><input type="radio" name="q2" value="A"> A. Like a GIF of a mic drop.</label>
+      <label><input type="radio" name="q2" value="B"> B. Casually, with a flawless glide to my chair.</label>
+      <label><input type="radio" name="q2" value="C"> C. Spinning in, latte in hand, possibly late.</label>
+      <label><input type="radio" name="q2" value="D"> D. With a meaningful pause and a deep, theatrical sigh.</label>
+      <label><input type="radio" name="q2" value="E"> E. With three color-coded notebooks and a backup pen.</label>
+    </div>
+
+    <div class="question">
+      <p>3. Your catchphrase during a team project is:</p>
+      <label><input type="radio" name="q3" value="A"> A. "Let’s shake things up."</label>
+      <label><input type="radio" name="q3" value="B"> B. "We got this. Smooth sailing."</label>
+      <label><input type="radio" name="q3" value="C"> C. "Wait, what’s the deadline again?"</label>
+      <label><input type="radio" name="q3" value="D"> D. "I feel like this slide needs… <strong>emotion.</strong>"</label>
+      <label><input type="radio" name="q3" value="E"> E. "I made a checklist and a Google Sheet."</label>
+    </div>
+
+    <div class="question">
+      <p>4. What’s your ideal retreat activity?</p>
+      <label><input type="radio" name="q4" value="A"> A. Debate club meets dance-off.</label>
+      <label><input type="radio" name="q4" value="B"> B. A guided reflection circle in matching socks.</label>
+      <label><input type="radio" name="q4" value="C"> C. Improv games you forgot you signed up for.</label>
+      <label><input type="radio" name="q4" value="D"> D. Journaling with mood lighting and instrumental film scores.</label>
+      <label><input type="radio" name="q4" value="E"> E. A well-labeled buffet and a breakout session on Google Drive tips.</label>
+    </div>
+
+    <div class="question">
+      <p>5. Pick a retreat snack:</p>
+      <label><input type="radio" name="q5" value="A"> A. Spicy trail mix that bites back.</label>
+      <label><input type="radio" name="q5" value="B"> B. Dark chocolate with a side of mindfulness.</label>
+      <label><input type="radio" name="q5" value="C"> C. A chaotic plate of "just a little of everything."</label>
+      <label><input type="radio" name="q5" value="D"> D. Whatever’s wrapped in gold foil and looks poetic.</label>
+      <label><input type="radio" name="q5" value="E"> E. Hummus and veggie cups, arranged by color.</label>
+    </div>
+
+    <button type="button" onclick="calculateResult()">Reveal My Transition!</button>
   </form>
 
-  <!-- Results here (unchanged) -->
-
-  <div id="confetti" class="confetti"></div>
-
-  <div id="clippy">
-    <img src="https://media.giphy.com/media/26xBukh1EjQfLzWv6/giphy.gif" alt="Clippy">
-    <p>It looks like you're discovering your inner transition!</p>
+  <div id="resultFlash" class="result">
+    <p><span class="emoji">🎇</span><strong>You are: Flash</strong><br>
+    You’re bold, you’re brilliant, and your presence turns heads. People <em>notice</em> you, even if they don’t always know what just happened. You make an impact—and then you're onto the next thing.</p>
   </div>
 
-  <button onclick="retakeQuiz()" style="display:none" id="retakeBtn">Retake Quiz</button>
+  <div id="resultFade" class="result">
+    <p><span class="emoji">🌊</span><strong>You are: Fade</strong><br>
+    Smooth. Sophisticated. Subtle. You’re the glue of the group—low drama, high function. You never overpower the moment, but you <em>always</em> elevate it.</p>
+  </div>
+
+  <div id="resultSwivel" class="result">
+    <p><span class="emoji">🌀</span><strong>You are: Swivel</strong><br>
+    You're unpredictable in the best way. People never know quite what’s coming, but they know it’ll be fun. You bring movement, energy, and just a dash of mischief.</p>
+  </div>
+
+  <div id="resultCurtains" class="result">
+    <p><span class="emoji">🎭</span><strong>You are: Curtains</strong><br>
+    You are a deeply emotional soul in a PowerPoint world. Every transition is a performance. You bring the depth, the pause, the mystery. Someone get this slide a soundtrack.</p>
+  </div>
+
+  <div id="resultPush" class="result">
+    <p><span class="emoji">📋</span><strong>You are: Push</strong><br>
+    Reliable. Direct. Efficient. You’re the Type A hero who keeps the whole presentation—and the people in it—on track. You’ve probably already sent the follow-up email.</p>
+  </div>
 
   <script>
     function calculateResult() {
@@ -129,69 +154,24 @@
 
       document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
 
-      let resultDivId = '';
       switch(result) {
-        case 'A': resultDivId = 'resultFlash'; break;
-        case 'B': resultDivId = 'resultFade'; break;
-        case 'C': resultDivId = 'resultSwivel'; break;
-        case 'D': resultDivId = 'resultCurtains'; break;
-        case 'E': resultDivId = 'resultPush'; break;
-      }
-
-      document.getElementById(resultDivId).style.display = 'block';
-      playSound();
-      launchConfetti();
-      showClippy();
-      document.getElementById('retakeBtn').style.display = 'inline-block';
-    }
-
-    function retakeQuiz() {
-      document.getElementById('quizForm').reset();
-      document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
-      document.getElementById('retakeBtn').style.display = 'none';
-      document.getElementById('clippy').style.display = 'none';
-    }
-
-    function playSound() {
-      const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
-      audio.play();
-    }
-
-    function launchConfetti() {
-      const confettiContainer = document.getElementById('confetti');
-      confettiContainer.innerHTML = '';
-      for (let i = 0; i < 100; i++) {
-        const confetto = document.createElement('div');
-        confetto.style.position = 'absolute';
-        confetto.style.width = '8px';
-        confetto.style.height = '12px';
-        confetto.style.backgroundColor = ['#4b0082', '#ff69b4', '#00bfff'][i % 3];
-        confetto.style.top = '-10px';
-        confetto.style.left = Math.random() * window.innerWidth + 'px';
-        confetto.style.transform = `rotate(${Math.random() * 360}deg)`;
-        confetto.style.opacity = 0.8;
-        confetto.style.animation = `fall ${2 + Math.random() * 3}s ease-in-out forwards`;
-        confettiContainer.appendChild(confetto);
+        case 'A':
+          document.getElementById('resultFlash').style.display = 'block';
+          break;
+        case 'B':
+          document.getElementById('resultFade').style.display = 'block';
+          break;
+        case 'C':
+          document.getElementById('resultSwivel').style.display = 'block';
+          break;
+        case 'D':
+          document.getElementById('resultCurtains').style.display = 'block';
+          break;
+        case 'E':
+          document.getElementById('resultPush').style.display = 'block';
+          break;
       }
     }
-
-    function showClippy() {
-      const clippy = document.getElementById('clippy');
-      clippy.style.display = 'block';
-      setTimeout(() => clippy.style.display = 'none', 5000);
-    }
-
-    const styleSheet = document.createElement("style");
-    styleSheet.type = "text/css";
-    styleSheet.innerText = `
-      @keyframes fall {
-        to {
-          transform: translateY(100vh) rotate(720deg);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(styleSheet);
   </script>
 </body>
 </html>
