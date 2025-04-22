@@ -4,9 +4,194 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Which PowerPoint Transition Are You?</title>
-  <!-- Styles and body content goes here -->
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #ffffff, #f0f0ff);
+      color: #333;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      margin-top: 2rem;
+      color: #4b0082;
+    }
+    .question {
+      margin-top: 1.5rem;
+      background-color: #f9f9ff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .question p {
+      font-weight: bold;
+    }
+    .question label {
+      display: block;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #e6e6ff;
+      border-left: 6px solid #4b0082;
+      border-radius: 8px;
+      display: none;
+      animation: pop 0.4s ease-in-out;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .emoji {
+      font-size: 1.8rem;
+      margin-right: 0.4rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #4b0082;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #36005e;
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #clippy {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 10000;
+      display: none;
+      background: white;
+      border-radius: 10px;
+      padding: 0.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    #clippy img {
+      width: 80px;
+    }
+    #clippy p {
+      margin: 0.5rem 0 0 0;
+      font-size: 0.9rem;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <!-- Full HTML content inserted by assistant goes here -->
+  <h1>💫 Which PowerPoint Transition Are You?</h1>
+  <p style="text-align:center; font-style: italic;">Because your personality deserves its own dramatic entrance.</p>
+
+  <form id="quizForm">
+    <!-- Questions here (unchanged) -->
+  </form>
+
+  <!-- Results here (unchanged) -->
+
+  <div id="confetti" class="confetti"></div>
+
+  <div id="clippy">
+    <img src="https://media.giphy.com/media/26xBukh1EjQfLzWv6/giphy.gif" alt="Clippy">
+    <p>It looks like you're discovering your inner transition!</p>
+  </div>
+
+  <button onclick="retakeQuiz()" style="display:none" id="retakeBtn">Retake Quiz</button>
+
+  <script>
+    function calculateResult() {
+      const form = document.forms["quizForm"];
+      const answers = [form.q1.value, form.q2.value, form.q3.value, form.q4.value, form.q5.value];
+      const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+      answers.forEach(a => counts[a]++);
+
+      const max = Math.max(...Object.values(counts));
+      const result = Object.keys(counts).find(key => counts[key] === max);
+
+      document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
+
+      let resultDivId = '';
+      switch(result) {
+        case 'A': resultDivId = 'resultFlash'; break;
+        case 'B': resultDivId = 'resultFade'; break;
+        case 'C': resultDivId = 'resultSwivel'; break;
+        case 'D': resultDivId = 'resultCurtains'; break;
+        case 'E': resultDivId = 'resultPush'; break;
+      }
+
+      document.getElementById(resultDivId).style.display = 'block';
+      playSound();
+      launchConfetti();
+      showClippy();
+      document.getElementById('retakeBtn').style.display = 'inline-block';
+    }
+
+    function retakeQuiz() {
+      document.getElementById('quizForm').reset();
+      document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
+      document.getElementById('retakeBtn').style.display = 'none';
+      document.getElementById('clippy').style.display = 'none';
+    }
+
+    function playSound() {
+      const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
+      audio.play();
+    }
+
+    function launchConfetti() {
+      const confettiContainer = document.getElementById('confetti');
+      confettiContainer.innerHTML = '';
+      for (let i = 0; i < 100; i++) {
+        const confetto = document.createElement('div');
+        confetto.style.position = 'absolute';
+        confetto.style.width = '8px';
+        confetto.style.height = '12px';
+        confetto.style.backgroundColor = ['#4b0082', '#ff69b4', '#00bfff'][i % 3];
+        confetto.style.top = '-10px';
+        confetto.style.left = Math.random() * window.innerWidth + 'px';
+        confetto.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confetto.style.opacity = 0.8;
+        confetto.style.animation = `fall ${2 + Math.random() * 3}s ease-in-out forwards`;
+        confettiContainer.appendChild(confetto);
+      }
+    }
+
+    function showClippy() {
+      const clippy = document.getElementById('clippy');
+      clippy.style.display = 'block';
+      setTimeout(() => clippy.style.display = 'none', 5000);
+    }
+
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = `
+      @keyframes fall {
+        to {
+          transform: translateY(100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+  </script>
 </body>
 </html>
