@@ -186,80 +186,93 @@
   <button onclick="retakeQuiz()" style="display:none" id="retakeBtn">Retake Quiz</button>
 
   <script>
-    function calculateResult() {
-      const form = document.forms["quizForm"];
-      const answers = [form.q1.value, form.q2.value, form.q3.value, form.q4.value, form.q5.value];
-      const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
-      answers.forEach(a => counts[a]++);
+  function calculateResult() {
+    const form = document.forms["quizForm"];
 
-      const max = Math.max(...Object.values(counts));
-      const result = Object.keys(counts).find(key => counts[key] === max);
-
-      document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
-
-      let resultDivId = '';
-      switch(result) {
-        case 'A': resultDivId = 'resultFlash'; break;
-        case 'B': resultDivId = 'resultFade'; break;
-        case 'C': resultDivId = 'resultSwivel'; break;
-        case 'D': resultDivId = 'resultCurtains'; break;
-        case 'E': resultDivId = 'resultPush'; break;
-      }
-
-      document.getElementById(resultDivId).style.display = 'block';
-      playSound();
-      launchConfetti();
-      showClippy();
-      document.getElementById('retakeBtn').style.display = 'inline-block';
-    }
-
-    function retakeQuiz() {
-      document.getElementById('quizForm').reset();
-      document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
-      document.getElementById('retakeBtn').style.display = 'none';
-      document.getElementById('clippy').style.display = 'none';
-    }
-
-    function playSound() {
-      const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
-      audio.play();
-    }
-
-    function launchConfetti() {
-      const confettiContainer = document.getElementById('confetti');
-      confettiContainer.innerHTML = '';
-      for (let i = 0; i < 100; i++) {
-        const confetto = document.createElement('div');
-        confetto.style.position = 'absolute';
-        confetto.style.width = '8px';
-        confetto.style.height = '12px';
-        confetto.style.backgroundColor = ['#4b0082', '#ff69b4', '#00bfff'][i % 3];
-        confetto.style.top = '-10px';
-        confetto.style.left = Math.random() * window.innerWidth + 'px';
-        confetto.style.transform = `rotate(${Math.random() * 360}deg)`;
-        confetto.style.opacity = 0.8;
-        confetto.style.animation = `fall ${2 + Math.random() * 3}s ease-in-out forwards`;
-        confettiContainer.appendChild(confetto);
+    // ✅ Validate all questions are answered
+    for (let i = 1; i <= 5; i++) {
+      if (!form[`q${i}`].value) {
+        alert(`You missed question ${i}. Please answer all before continuing!`);
+        return;
       }
     }
 
-    function showClippy() {
-      const clippy = document.getElementById('clippy');
-      clippy.style.display = 'block';
-      setTimeout(() => clippy.style.display = 'none', 5000);
+    // ✅ Count answers
+    const answers = [form.q1.value, form.q2.value, form.q3.value, form.q4.value, form.q5.value];
+    const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+    answers.forEach(a => counts[a]++);
+
+    const max = Math.max(...Object.values(counts));
+    const result = Object.keys(counts).find(key => counts[key] === max);
+
+    // ✅ Hide all result boxes
+    document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
+
+    // ✅ Show the correct result
+    let resultDivId = '';
+    switch (result) {
+      case 'A': resultDivId = 'resultFlash'; break;
+      case 'B': resultDivId = 'resultFade'; break;
+      case 'C': resultDivId = 'resultSwivel'; break;
+      case 'D': resultDivId = 'resultCurtains'; break;
+      case 'E': resultDivId = 'resultPush'; break;
     }
 
-    const styleSheet = document.createElement("style");
-    styleSheet.type = "text/css";
-    styleSheet.innerText = `
-      @keyframes fall {
-        to {
-          transform: translateY(100vh) rotate(720deg);
-          opacity: 0;
-        }
+    document.getElementById(resultDivId).style.display = 'block';
+    playSound();
+    launchConfetti();
+    showClippy();
+    document.getElementById('retakeBtn').style.display = 'inline-block';
+  }
+
+  function retakeQuiz() {
+    document.getElementById('quizForm').reset();
+    document.querySelectorAll('.result').forEach(r => r.style.display = 'none');
+    document.getElementById('retakeBtn').style.display = 'none';
+    document.getElementById('clippy').style.display = 'none';
+  }
+
+  function playSound() {
+    const audio = new Audio('https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg');
+    audio.play();
+  }
+
+  function launchConfetti() {
+    const confettiContainer = document.getElementById('confetti');
+    confettiContainer.innerHTML = '';
+    for (let i = 0; i < 100; i++) {
+      const confetto = document.createElement('div');
+      confetto.style.position = 'absolute';
+      confetto.style.width = '8px';
+      confetto.style.height = '12px';
+      confetto.style.backgroundColor = ['#4b0082', '#ff69b4', '#00bfff'][i % 3];
+      confetto.style.top = '-10px';
+      confetto.style.left = Math.random() * window.innerWidth + 'px';
+      confetto.style.transform = `rotate(${Math.random() * 360}deg)`;
+      confetto.style.opacity = 0.8;
+      confetto.style.animation = `fall ${2 + Math.random() * 3}s ease-in-out forwards`;
+      confettiContainer.appendChild(confetto);
+    }
+  }
+
+  function showClippy() {
+    const clippy = document.getElementById('clippy');
+    clippy.style.display = 'block';
+    setTimeout(() => clippy.style.display = 'none', 5000);
+  }
+
+  // Append keyframes for falling confetti
+  const styleSheet = document.createElement("style");
+  styleSheet.type = "text/css";
+  styleSheet.innerText = `
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
       }
-    `;
-    document.head.appendChild(styleSheet);
-  </script>
+    }
+  `;
+  document.head.appendChild(styleSheet);
+</script>
 </body>
 </html>
